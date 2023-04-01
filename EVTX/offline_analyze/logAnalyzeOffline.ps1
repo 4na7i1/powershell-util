@@ -4,16 +4,16 @@ $resultTemp = "result.tmp"
 
 if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole("Administrators")){ 
     # $sqFile = "$(Get-Location)\Client_offline.xml"
+    # Write-Output "No Administrators"
     $setFolder = (Get-Location).Path
-    Write-Output "No Administrators"
-    Start-Process powershell.exe "-File `"$PSCommandPath`" -WorkingDirectory `"$setFolder`"" -Verb RunAs -Wait -WindowStyle Hidden
+    Start-Process powershell.exe "-ExecutionPolicy Bypass -File `"$PSCommandPath`" -WorkingDirectory `"$setFolder`"" -Verb RunAs -Wait
     $resultFile = Join-Path $setFolder $resultTemp
     Get-Content $resultFile
     Remove-Item $resultFile > $null
     exit
 }
 else{
-    Write-Output "Administrators"
+    # Write-Output "Administrators"
     $isAdmin = $true
 }
 
@@ -68,6 +68,8 @@ try {
                 elseif($data.Name -eq "TargetLinkedLogonId"){$logonid_l=$data."#text"}
             }
             Write-Output "'Logon' $DateTime $fromDom ($Ip : $IpPort)"
+            # "'Logon' $DateTime $fromDom ($Ip : $IpPort)" > $resultFile
+            Add-Content -Path $resultFile "'Logon' $DateTime $fromDom ($Ip : $IpPort)" 
         }
         elseif($EventID -eq 4625){#Logon to this machine (Failed)
             $fromUser = ($evt.EventData.Data[5])."#text"
@@ -77,15 +79,17 @@ try {
             $Ip = ($evt.EventData.Data[-2])."#text"
             $IpPort = ($evt.EventData.Data[-1])."#text"
     
-            Write-Output "'Logon(Failed)    ' $Datetime ($logonType)-[$subStatus] $fromDom/$fromUser ($Ip : $ipPort)"
+            Write-Output "'Logon(Failed)' $Datetime ($logonType)-[$subStatus] $fromDom/$fromUser ($Ip : $ipPort)"
+            # "'Logon(Failed)' $Datetime ($logonType)-[$subStatus] $fromDom/$fromUser ($Ip : $ipPort)" > $resultFile
+            Add-Content -Path $resultFile "'Logon(Failed)' $Datetime ($logonType)-[$subStatus] $fromDom/$fromUser ($Ip : $ipPort)"
         }
     }
 }
 finally {
     <#Do this after the try block regardless of whether an exception occurred or not#>
-    if($isAdmin){
-        Get-Content $resultFile
-    }
+    # if($isAdmin){
+    #     Get-Content $resultFile
+    # }
     
     $stream.Dispose()
 }
