@@ -1,3 +1,5 @@
+# Convert evtx file to json file
+# Example : ./convert-evtx-json -basepath "(folder or evtx file path)"
 param([Alias("PSPath")][string[]]$basePath)
 
 # Import Module

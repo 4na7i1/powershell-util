@@ -1,4 +1,8 @@
-# modularization -> module_evtx.psm1
+# Convert evtx file to json file
+# [Example] ./convert-evtx-xml -basepath "(folder or evtx file path)
+#  [options] -overwrite : Flag whether to process for those already converted to xml
+# [Memo] 
+#  [0]modularization -> module_evtx.psm1
 [CmdletBinding()]param([switch]$overwrite,[Alias("PSPath")][string[]]$basePath)
 
 if ($basePath) {

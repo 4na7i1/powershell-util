@@ -118,6 +118,11 @@ function Open-logPath {
 
 
 function Convert-EvtxToXML {
+    # Convert evtx file to xml file
+    # [Example] ./convert-evtx-xml -basepath "(folder or evtx file path)
+    #  [options] 
+    #    -overwrite : Flag whether to process for those already converted to xml
+    #    -output : Flag whether the converted xml should be written to a file or not
     [CmdletBinding()]param([switch]$output,[switch]$overwrite,[Alias("PSPath")][string[]]$basePath)
 
     if ($basePath) {
