@@ -1,9 +1,5 @@
+# modularization -> module_evtx.psm1
 [CmdletBinding()]param([switch]$overwrite,[Alias("PSPath")][string[]]$basePath)
-
-# Specifies a path to one or more locations. Unlike the Path parameter, the value of the LiteralPath parameter is
-# used exactly as it is typed. No characters are interpreted as wildcards. If the path includes escape characters,
-# enclose it in single quotation marks. Single quotation marks tell Windows PowerShell not to interpret any
-# characters as escape sequences.
 
 if ($basePath) {
     $evtxFiles = Get-ChildItem -LiteralPath $basePath -Filter "*.evtx" -Recurse
@@ -11,7 +7,6 @@ if ($basePath) {
 else{
     $evtxFiles = Get-ChildItem -Path ./ -Filter "*.evtx" -Recurse
 }
-# param($evtxFile)
 
 foreach($evtxFile in $evtxFiles){
     $xmlFile = Join-Path -Path $evtxFile.Directory.FullName -ChildPath ($evtxFile.BaseName + ".xml")
