@@ -5,11 +5,13 @@ param([Alias("PSPath")][string[]]$basePath)
 # Import Module
 Import-Module -Name "..\EVTX\module_evtx\module_evtx.psm1" -Force -Function Convert-EvtxToXML
 
-# Evtx -> Json
+# evtx -> xml
 $events = Convert-EvtxToXML -basePath $basePath
 
-# Json -> Json
+# xml -> json
+Write-Output "Evtx -> Json"
 $evtxFiles = Get-ChildItem -LiteralPath $basePath -Filter "*.evtx" -Recurse
+
 $i=0
 foreach($event in $events){
     $jsonFile = Join-Path -Path $evtxFiles[$i].Directory.FullName -ChildPath ($evtxFiles[$i].BaseName + ".json")
@@ -55,3 +57,4 @@ foreach($event in $events){
     ConvertTo-Json -InputObject  $eventsList -Depth 100 > $jsonFile
     $i++
 }
+Write-Output "Done."

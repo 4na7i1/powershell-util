@@ -1,4 +1,4 @@
-function test {
+function runAs {
     [CmdletBinding()]param($psFilePath,$psFileDirectory)
     if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole("Administrators")){ 
         # $sqFile = "$(Get-Location)\Client_offline.xml"
