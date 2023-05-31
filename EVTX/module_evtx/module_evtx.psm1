@@ -135,29 +135,38 @@ function Convert-EvtxToXML {
         $evtxFiles = Get-ChildItem -Path $basePath -Filter "*.evtx" -Recurse
     }
     
-    if($evtxFiles.count -eq 0){Write-Output "NO evtx files in $basePath ";EXIT}
+    if($evtxFiles.count -eq 0){Write-Host "NO evtx files in $basePath ";EXIT}
     # elseif(($evtxFiles.count -ge 2) -and (!$output)){$xmlArray = New-Object System.Collections.ArrayList}
     
     $xmlArray = New-Object System.Collections.ArrayList
 
     foreach($evtxFile in $evtxFiles){
+        Write-Host "[evtx -> xml] $evtxFile"
         $xmlFile = Join-Path -Path $evtxFile.Directory.FullName -ChildPath ($evtxFile.BaseName + ".xml")
         if(!(Test-Path $xmlFile) -or $overwrite){
             if($output){
-                (wevtutil qe $evtxFile /logfile /e:root) > $xmlFile
-                Write-Output "Done: $xmlFile"
+                (wevtutil qe $evtxFile /lf /rd:false /e:root /f:xml) > $xmlFile
+                Write-Host "Done: $xmlFile"
             }
             else{
-                [XML]$xml = wevtutil qe $evtxFile /logfile /e:root
+                Write-Host "B"
+                $ErrorActionPreference = 'SilentlyContinue' #Avoid MetadataError
+                # [XML]$xml = wevtutil qe $evtxFile /lf /rd:false /e:root /f:xml
+                [XML]$xml = wevtutil qe "./example_evtx/sysmon/sysmon.evtx" /lf /f:XML /rd:false /e:root
+                $ErrorActionPreference = 'Continue'
+                Write-Host $xml
                 $xmlArray.Add($xml) > $null
             }
         }
         else{
             if($output){
-                Write-Output "Already Done: $xmlFile"
+                Write-Host "Already Done: $xmlFile"
             }
             else{
-                [XML]$xml = wevtutil qe $evtxFile /logfile /e:root
+                Write-Host "D"
+                $ErrorActionPreference = 'SilentlyContinue' #Avoid MetadataError
+                [XML]$xml = wevtutil qe $evtxFile /lf /rd:false /e:root /f:xml
+                $ErrorActionPreference = 'Continue'
                 $xmlArray.Add($xml) > $null
             }
         }
