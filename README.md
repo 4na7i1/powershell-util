@@ -30,7 +30,8 @@
 │   │   ├── Get-BootKey-Offline.ps1     : Get BootKey from SYSTEM File
 │   │   ├── Get-NTHash-Live.ps1         : Get Local Machine`s NTHash
 │   │   ├── Get-NTHash-Live-SYSTEM.ps1
-│   │   └── Get-SAM.ps1                 : Extract SAM-Database
+│   │   ├── Get-SAM.ps1                 : Extract SAM-Database
+|   |   └── Bypass-UAC.ps1              : Bypass UAC (SDCLT)
 │   ├── generateNTLM.ps1
 │   ├── module_sec
 │   │   ├── module_credential.psm1   : test-file:module_credential.psm1
